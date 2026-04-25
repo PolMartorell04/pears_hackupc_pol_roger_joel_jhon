@@ -6,11 +6,7 @@
 <title>Sala de Subastas</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:Arial,sans-serif;
@@ -19,10 +15,7 @@ body{
   padding:24px;
 }
 
-.container{
-  max-width:1400px;
-  margin:auto;
-}
+.container{max-width:1400px;margin:auto}
 
 .top{
   display:grid;
@@ -61,31 +54,13 @@ body{
   justify-content:center;
   color:#94a3b8;
   margin-bottom:18px;
+  overflow:hidden;
 }
 
-.buttons{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:20px;
-}
-
-.btn{
-  border:none;
-  padding:14px 18px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.green{
-  background:#10b981;
-  color:white;
-}
-
-.dark{
-  background:#1e293b;
-  color:white;
+.product img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
 .list div{
@@ -95,7 +70,6 @@ body{
   border-bottom:1px solid #1e293b;
 }
 
-/* NUEVOS ESTILOS */
 .auction-stats{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -122,13 +96,8 @@ body{
   font-weight:bold;
 }
 
-.danger{
-  color:#f87171;
-}
-
-.success{
-  color:#10b981;
-}
+.danger{color:#f87171}
+.success{color:#10b981}
 
 .quick-bids{
   display:flex;
@@ -194,22 +163,22 @@ body{
 
 <div class="container">
 
-  <!-- TOP -->
   <div class="top">
     <div class="card">
       <div class="muted">Sala</div>
-      <div class="big">LiveBid #01</div>
+      <div class="big" id="sessionTitle">LiveBid #01</div>
     </div>
   </div>
-  <!-- MAIN -->
+
   <div class="grid">
 
-    <!-- IZQUIERDA -->
     <div class="card">
 
-      <div class="product"><img src="https://picsum.photos/600/300"></div>
+      <div class="product">
+        <img src="https://picsum.photos/600/300">
+      </div>
 
-      <h1>Reloj Vintage Edición Limitada</h1>
+      <h1 id="lotTitle">Reloj Vintage Edición Limitada</h1>
       <p class="muted">Lote #124 · Excelente estado · Certificado incluido</p>
 
       <section class="card" style="padding:20px;">
@@ -228,24 +197,26 @@ body{
 
           <div class="stat-box">
             <span class="label">Incremento mínimo</span>
-            <span class="value">10 €</span>
+            <span class="value" id="minIncrement">10 €</span>
           </div>
 
           <div class="stat-box">
             <span class="label">Ganando</span>
-            <span class="value success">Joel</span>
+            <span class="value success" id="winner">Sin pujas</span>
           </div>
 
         </div>
 
         <div class="quick-bids">
-          <button class="bid-btn" onclick="bid(10)">+10 €</button>
-          <button class="bid-btn" onclick="bid(25)">+25 €</button>
-          <button class="bid-btn" onclick="bid(50)">+50 €</button>
+          <button class="bid-btn" onclick="bidIncrement(10)">+10 €</button>
+          <button class="bid-btn" onclick="bidIncrement(25)">+25 €</button>
+          <button class="bid-btn" onclick="bidIncrement(50)">+50 €</button>
         </div>
 
+        <button class="primary-btn" style="margin-top:15px;" onclick="closeCurrentLot()">Cerrar lote</button>
+
         <div class="custom-bid">
-          <input type="number" id="customBid" placeholder="Introduce tu puja">
+          <input type="text" id="customBid" placeholder="Introduce tu puja total" inputmode="numeric" autocomplete="off" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
           <button class="primary-btn" onclick="customBid()">Pujar</button>
         </div>
 
@@ -253,7 +224,6 @@ body{
 
     </div>
 
-    <!-- DERECHA -->
     <div>
 
       <div class="card" style="margin-bottom:20px;">
@@ -266,13 +236,7 @@ body{
       <div class="card">
         <h2>Actividad</h2>
         <br>
-
-        <div class="list" id="activity">
-          <div><span>usuario_91</span><span>€1250</span></div>
-          <div><span>bidmaster22</span><span>€1225</span></div>
-          <div><span>anon_18</span><span>€1200</span></div>
-        </div>
-
+        <div class="list" id="activity"></div>
       </div>
 
     </div>
@@ -281,52 +245,185 @@ body{
 
 </div>
 
-<script>
-let price = 1250;
-let time = 134;
+<script type="module">
+import { applyEvent } from '../engine/reducer.js'
+import { handleBidRequestEvents } from '../engine/bidFlow.js'
+import { closeLotEvents } from '../engine/lotActions.js'
 
-function bid(amount){
-  price += amount;
+let time = 381
 
-  document.getElementById("price").innerText = "€" + price;
-  document.getElementById("price2").innerText = price + " €";
-
-  const row = document.createElement("div");
-  row.innerHTML = "<span>Tú</span><span>€" + price + "</span>";
-
-  document.getElementById("activity").prepend(row);
+let state = {
+  session: {
+    id: 'session-1',
+    title: 'LiveBid #01',
+    hostId: 'host-1',
+    status: 'live',
+    createdAt: Date.now()
+  },
+  lots: [
+    {
+      id: 'lot-1',
+      title: 'Reloj Vintage Edición Limitada',
+      status: 'live',
+      startingPrice: 420,
+      currentPrice: 420,
+      minIncrement: 10
+    }
+  ],
+  participants: [
+    {
+      id: 'bidder-1',
+      name: 'Tú',
+      role: 'bidder',
+      status: 'approved',
+      createdAt: Date.now()
+    }
+  ],
+  currentLotId: 'lot-1',
+  officialEvents: []
 }
 
-function customBid(){
-  const val = parseInt(document.getElementById("customBid").value);
+function nextSequence(){
+  return state.officialEvents.length + 1
+}
 
-  if(!isNaN(val) && val > 0){
-    bid(val);
-    document.getElementById("customBid").value = "";
+function dispatch(event){
+  state = applyEvent(state, event)
+  addActivity(event)
+  render()
+}
+
+function getCurrentLot(){
+  return state.lots.find(lot => lot.id === state.currentLotId)
+}
+
+function render(){
+  const lot = getCurrentLot()
+  if(!lot) return
+
+  document.getElementById('sessionTitle').innerText = state.session.title
+  document.getElementById('lotTitle').innerText = lot.title
+  document.getElementById('price2').innerText = lot.currentPrice + ' €'
+  document.getElementById('minIncrement').innerText = lot.minIncrement + ' €'
+
+  if(lot.currentBidderId){
+    const bidder = state.participants.find(p => p.id === lot.currentBidderId)
+    document.getElementById('winner').innerText = bidder?.name ?? lot.currentBidderId
+  }else{
+    document.getElementById('winner').innerText = 'Sin pujas'
   }
+}
+
+function addActivity(event){
+  const activity = document.getElementById('activity')
+  const row = document.createElement('div')
+
+  const name =
+    event.payload?.bidderId === 'bidder-1'
+      ? 'Tú'
+      : event.payload?.bidderId || ''
+
+  if(event.type === 'BID_REQUESTED'){
+    return
+  }
+
+  if(event.type === 'BID_ACCEPTED'){
+    row.innerHTML = `<span>${name}</span><span>${event.payload.amount} €</span>`
+  }
+
+  if(event.type === 'BID_REJECTED'){
+    row.innerHTML = `<span>Error</span><span>${event.payload.reason}</span>`
+    alert(event.payload.reason)
+  }
+
+  if(row.innerHTML){
+    activity.prepend(row)
+  }
+}
+
+window.bidIncrement = function(increment){
+  const lot = getCurrentLot()
+  if(!lot) return
+
+  const bidRequest = {
+    type: 'BID_REQUEST',
+    sessionId: state.session.id,
+    lotId: lot.id,
+    amount: lot.currentPrice + increment,
+    bidderId: 'bidder-1',
+    createdAt: Date.now()
+  }
+
+  const events = handleBidRequestEvents(state, bidRequest, nextSequence())
+
+  for(const event of events){
+    dispatch(event)
+  }
+}
+
+window.customBid = function(){
+  const lot = getCurrentLot()
+  if(!lot) return
+
+  const input = document.getElementById('customBid')
+  const amount = Number(input.value)
+
+  if(Number.isFinite(amount) && amount > 0){
+    const bidRequest = {
+      type: 'BID_REQUEST',
+      sessionId: state.session.id,
+      lotId: lot.id,
+      amount,
+      bidderId: 'bidder-1',
+      createdAt: Date.now()
+    }
+
+    const events = handleBidRequestEvents(state, bidRequest, nextSequence())
+
+    for(const event of events){
+      dispatch(event)
+    }
+
+    input.value = ''
+    input.blur()
+    setTimeout(() => input.focus(), 0)
+  }
+}
+
+window.closeCurrentLot = function(){
+  const lot = getCurrentLot()
+  if(!lot) return
+
+  const events = closeLotEvents(state, lot.id, {
+    sessionId: state.session.id,
+    sequence: nextSequence()
+  })
+
+  for(const event of events){
+    dispatch(event)
+  }
+
+  alert('Lote cerrado')
+}
+
+window.goBack = function(){
+  window.location.href = './../index.html'
 }
 
 setInterval(() => {
-
   if(time > 0){
-    time--;
+    time--
 
-    let m = Math.floor(time / 60).toString().padStart(2,"0");
-    let s = (time % 60).toString().padStart(2,"0");
+    const m = Math.floor(time / 60).toString().padStart(2, '0')
+    const s = (time % 60).toString().padStart(2, '0')
 
-    document.getElementById("timer").innerText = m + ":" + s;
-    document.getElementById("timer2").innerText = m + ":" + s;
-
+    document.getElementById('timer2').innerText = m + ':' + s
   }else{
-    document.getElementById("timer").innerText = "FINALIZADA";
-    document.getElementById("timer2").innerText = "FINALIZADA";
+    document.getElementById('timer2').innerText = 'FINALIZADA'
   }
+}, 1000)
 
-},1000);
-
-function goBack(){
-  window.location.href = "./../index.html";
-}
+render()
 </script>
 
 </body>
