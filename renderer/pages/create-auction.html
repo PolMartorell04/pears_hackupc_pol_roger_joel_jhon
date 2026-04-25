@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crear Subasta</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#0f172a;
+  color:#fff;
+  padding:24px;
+}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+}
+
+.title{
+  font-size:34px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.muted{
+  color:#94a3b8;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:22px;
+  margin-top:24px;
+  align-items:start;
+}
+
+.card{
+  background:#111827;
+  padding:22px;
+  border-radius:16px;
+}
+
+.field{
+  margin-bottom:18px;
+}
+
+.field label{
+  display:block;
+  margin-bottom:8px;
+  color:#cbd5e1;
+  font-size:14px;
+}
+
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#1e293b;
+  color:#fff;
+}
+
+.field textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+.upload{
+  border:2px dashed #334155;
+  border-radius:16px;
+  min-height:140px;
+  padding:5px;
+  text-align:center;
+  color:#94a3b8;
+  cursor:pointer;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:12px;
+
+  overflow:hidden;
+}
+
+.preview{
+  width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:12px;
+  display:none;
+}
+
+.btn{
+  border:none;
+  padding:14px 18px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.green{
+  background:#10b981;
+  color:#fff;
+  width:100%;
+}
+
+.list-item{
+  background:#1e293b;
+  padding:12px;
+  border-radius:12px;
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.small{
+  font-size:13px;
+  color:#94a3b8;
+}
+
+/* NUEVO */
+.right-column{
+  position:sticky;
+  top:20px;
+}
+
+.publish-box{
+  margin-bottom:20px;
+}
+
+.remove-btn{
+  background:#334155;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* AÑADE ESTE CSS NUEVO */
+
+.products-slider{
+  display:flex;
+  gap:14px;
+  overflow-x:auto;
+  padding-top:14px;
+  scroll-behavior:smooth;
+}
+
+.products-slider::-webkit-scrollbar{
+  height:8px;
+}
+
+.products-slider::-webkit-scrollbar-thumb{
+  background:#334155;
+  border-radius:20px;
+}
+
+.product-card{
+  min-width:320px;
+  max-width:320px;
+  max-height: 50px;
+  background:#1e293b;
+  border-radius:14px;
+  padding:10px;
+  flex-shrink:0;
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.product-card img{
+  width:45px;
+  height:45px;
+  object-fit:cover;
+  border-radius:10px;
+  flex-shrink:0;
+  margin-bottom:0;
+}
+
+.product-card h4{
+  font-size:15px;
+  margin-bottom:6px;
+}
+
+.product-card p{
+  font-size:12px;
+  color:#94a3b8;
+  line-height:1.4;
+}
+
+.product-card button{
+  position:absolute;
+  top:8px;
+  right:8px;
+  background:#0f172a;
+  border:none;
+  color:#fff;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+.product-info{
+  flex:1;
+  overflow:hidden;
+}
+
+.product-info h4{
+  font-size:15px;
+  font-weight:bold;
+  margin-bottom:6px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.product-info p{
+  font-size:12px;
+  color:#94a3b8;
+  line-height:1.4;
+
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+</style>
+</head>
+
+<body>
+
+<div style="position:fixed;top:20px;left:20px;z-index:10;">
+  <button onclick="goBack()" style="background:#111827;color:#fff;border:none;padding:12px 14px;border-radius:12px;cursor:pointer;font-size:20px;">←</button>
+</div>
+
+<div class="container">
+
+  <div class="title">Crear Nueva Subasta</div>
+  <p class="muted">Configura una sala lista para usuarios en tiempo real</p>
+
+  <div class="grid">
+
+    <!-- IZQUIERDA -->
+    <div class="card">
+
+      <div class="field">
+        <label>Título de la subasta</label>
+        <input type="text" placeholder="Ej: Electrónica Premium">
+      </div>
+
+      <div class="field">
+        <label>Tipo de subasta</label>
+        <select>
+          <option>Ascendente clásica</option>
+          <option>Tiempo relámpago</option>
+          <option>Secreta</option>
+          <option>Por rondas</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Tiempo máximo (minutos)</label>
+        <input type="number" placeholder="30">
+      </div>
+
+      <div class="field">
+        <label>Puja mínima (€)</label>
+        <input type="number" placeholder="25">
+      </div>
+
+      <div class="field">
+        <label>Descripción general</label>
+        <textarea placeholder="Información importante de la sala, reglas, condiciones..."></textarea>
+      </div>
+
+    </div>
+
+    <!-- DERECHA -->
+    <div class="right-column">
+
+      <!-- PUBLICAR ARRIBA -->
+      <div class="card publish-box">
+        <button class="btn green" onclick="publishAuction()">
+          Crear Subasta
+        </button>
+      </div>
+
+      <!-- PRODUCTOS -->
+      <div class="card">
+
+        <h2>Añadir producto</h2>
+        <p class="small">Añade los productos que aparecerán en orden</p>
+
+        <div class="field" style="margin-top:14px;">
+          <input type="text" id="productName" placeholder="Nombre del producto">
+        </div>
+
+        <div class="field">
+          <input type="text" id="productDetail" placeholder="Detalle o estado">
+        </div>
+
+        <div class="field">
+            <label>Imagen del producto</label>
+
+            <div class="upload" id="uploadBox">
+                <input type="file" id="file" accept="image/*" hidden>
+
+                <span id="uploadText">Haz clic para subir imagen</span>
+
+                <img id="preview" class="preview">
+            </div>
+        </div>
+
+        <button class="btn green" onclick="addProduct()">
+          Añadir producto
+        </button>
+
+        
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="products" class="products-slider"></div>
+
+</div>
+
+<script>
+// REEMPLAZA TODO TU BLOQUE DE IMAGEN POR ESTE
+
+const file = document.getElementById("file");
+const preview = document.getElementById("preview");
+const uploadBox = document.getElementById("uploadBox");
+const uploadText = document.getElementById("uploadText");
+
+uploadBox.addEventListener("click", () => {
+  file.click();
+});
+
+file.addEventListener("change", function () {
+
+  const selected = this.files[0];
+
+  if(selected){
+
+    const url = URL.createObjectURL(selected);
+
+    preview.src = url;
+    preview.style.display = "block";
+
+    uploadText.style.display = "none";
+  }
+
+});
+
+
+function addProduct(){
+
+  const name = document.getElementById("productName").value.trim();
+  const detail = document.getElementById("productDetail").value.trim();
+
+  if(!name) return;
+
+  let imgSrc = preview.src;
+
+  if(!imgSrc){
+    imgSrc = "https://via.placeholder.com/300x200?text=Producto";
+  }
+
+  const shortText = detail.split(" ").slice(0,6).join(" ") + (detail ? "..." : "");
+
+  const card = document.createElement("div");
+  card.className = "product-card";
+
+  card.innerHTML = `
+    <button onclick="this.parentElement.remove()">✕</button>
+
+  <img src="${imgSrc}">
+
+  <div class="product-info">
+    <h4>${name}</h4>
+    <p>${shortText}</p>
+  </div>
+  `;
+
+  document.getElementById("products").appendChild(card);
+
+  document.getElementById("productName").value = "";
+  document.getElementById("productDetail").value = "";
+
+  file.value = "";
+  preview.src = "";
+  preview.style.display = "none";
+  uploadText.style.display = "block";
+}
+
+function publishAuction(){
+  alert("Subasta creada correctamente");
+}
+
+function goBack(){
+  window.location.href = "./../index.html";
+}
+</script>
+
+</body>
+</html>
