@@ -40,6 +40,9 @@ export function applyEvent(
           )
         }
 
+      case 'BID_REQUESTED':
+        return state
+
       case 'BID_ACCEPTED':
         return {
           ...state,

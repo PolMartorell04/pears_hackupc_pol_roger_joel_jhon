@@ -3,8 +3,8 @@ console.log('DEMO START')
 import type { AuctionState, BidRequest } from './types'
 import type { AuctionEvent } from './events'
 import { applyEvent } from './reducer'
-import { handleBidRequest } from './bidFlow'
-import { closeLot } from './lotActions'
+import { handleBidRequestEvents } from './bidFlow'
+import { closeLotEvents } from './lotActions'
 import { generateReceipt } from './receipts'
 
 let state: AuctionState = {
@@ -54,7 +54,7 @@ function dispatch(event: AuctionEvent) {
   console.log('EVENT:', event.type, event.payload)
 }
 
-// Start lot
+// --- START LOT ---
 dispatch({
   type: 'LOT_STARTED',
   sessionId: state.session.id,
@@ -65,7 +65,7 @@ dispatch({
   }
 })
 
-// Bid
+// --- BID ---
 const bid: BidRequest = {
   type: 'BID_REQUEST',
   sessionId: state.session.id,
@@ -75,18 +75,19 @@ const bid: BidRequest = {
   createdAt: Date.now()
 }
 
-const bidEvent = handleBidRequest(state, bid, nextSequence())
-dispatch(bidEvent)
+for (const event of handleBidRequestEvents(state, bid, nextSequence())) {
+  dispatch(event)
+}
 
-// Close lot
-const soldEvent = closeLot(state, 'lot-1', {
+// --- CLOSE LOT ---
+for (const event of closeLotEvents(state, 'lot-1', {
   sessionId: state.session.id,
   sequence: nextSequence()
-})
+})) {
+  dispatch(event)
+}
 
-dispatch(soldEvent)
-
-// Receipt
+// --- RECEIPT ---
 const receipt = generateReceipt(state, 'lot-1')
 
 console.log('FINAL STATE:', state)

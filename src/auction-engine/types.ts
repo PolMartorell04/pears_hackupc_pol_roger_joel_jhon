@@ -46,7 +46,7 @@ export type Participant = {
 }
 
 export type BidRequest = {
-  type: 'BID_REQUEST'
+  type: 'BID_REQUEST' | 'BID_REQUESTED'
   sessionId: string
   lotId: string
   amount: number

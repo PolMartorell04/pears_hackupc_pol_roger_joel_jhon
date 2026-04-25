@@ -34,6 +34,10 @@ export function generateReceipt(
     throw new Error('Lot not found')
   }
 
+  if (lot.status !== 'sold' && lot.status !== 'unsold') {
+    throw new Error('Receipt can only be generated for sold or unsold lots')
+  }
+
   const lotEvents = state.officialEvents.filter(event =>
     'lotId' in event.payload && event.payload.lotId === lotId
   )
@@ -44,8 +48,8 @@ export function generateReceipt(
     sessionId: state.session.id,
     lotId,
     winnerId: lot.winnerId,
-    finalAmount: lot.winnerId ? lot.currentPrice : undefined,
-    status: lot.winnerId ? 'sold' : 'unsold',
+    finalAmount: lot.status === 'sold' ? lot.currentPrice : undefined,
+    status: lot.status,
     eventCount: lotEvents.length,
     logHash,
     createdAt: Date.now(),
