@@ -71,7 +71,7 @@ function getPear() {
       server: false
     })
   }
-  pear.on('error', console.error) // print network errors, etc.
+  pear.on('error', console.error) 
   return pear
 }
 
