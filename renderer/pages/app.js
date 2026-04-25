@@ -4,7 +4,7 @@ const bridge = window.bridge
 const WORKER = '/workers/main.js'
 const decoder = new TextDecoder('utf-8')
 
-let messageListeners = []
+const messageListeners = []
 
 function emit(msg) {
   for (const l of messageListeners) l(msg)
@@ -29,7 +29,10 @@ const workerReady = (async () => {
     const raw = decoder.decode(data)
     console.log('WORKER RAW →', raw)
 
-    for (const chunk of raw.split('\n').map(s => s.trim()).filter(Boolean)) {
+    for (const chunk of raw
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean)) {
       try {
         const msg = JSON.parse(chunk)
         console.log('WORKER →', msg)
@@ -48,10 +51,7 @@ const workerReady = (async () => {
 async function sendToWorker(msg) {
   await workerReady
 
-  bridge.writeWorkerIPC(
-    WORKER,
-    JSON.stringify(msg)
-  )
+  bridge.writeWorkerIPC(WORKER, JSON.stringify(msg))
 }
 
 export function onNetworkMessage(cb) {

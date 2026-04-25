@@ -1,122 +1,222 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inicio Subastas</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Arial,sans-serif;background:#0f172a;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.container{max-width:1100px;width:100%}
-.hero{text-align:center;margin-bottom:32px}
-.hero h1{font-size:42px;margin-bottom:10px}
-.muted{color:#94a3b8}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-.card{background:#111827;border-radius:20px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:.2s}
-.card:hover{transform:translateY(-4px)}
-.image{height:220px;border-radius:16px;background:#1e293b;display:flex;align-items:center;justify-content:center;color:#94a3b8;margin-bottom:20px;font-size:18px}
-.title{font-size:28px;font-weight:bold;margin-bottom:10px}
-.desc{color:#94a3b8;line-height:1.5;margin-bottom:22px}
-.btn{display:inline-block;width:100%;text-align:center;text-decoration:none;padding:15px;border-radius:14px;font-weight:bold;cursor:pointer;border:none}
-.green{background:#10b981;color:#fff}
-.dark{background:#1e293b;color:#fff}
-.stats{display:flex;gap:12px;margin-top:14px}
-.pill{background:#1e293b;padding:8px 12px;border-radius:999px;font-size:13px;color:#cbd5e1}
-.join-input{width:100%;height:120px;margin-top:16px;border-radius:12px;padding:12px;background:#0f172a;color:white;border:1px solid #334155;resize:vertical;font-family:monospace;font-size:12px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.hero h1{font-size:34px}}
-</style>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio Subastas</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .container {
+        max-width: 1100px;
+        width: 100%;
+      }
+      .hero {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      .hero h1 {
+        font-size: 42px;
+        margin-bottom: 10px;
+      }
+      .muted {
+        color: #94a3b8;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .card {
+        background: #111827;
+        border-radius: 20px;
+        padding: 28px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        transition: 0.2s;
+      }
+      .card:hover {
+        transform: translateY(-4px);
+      }
+      .image {
+        height: 220px;
+        border-radius: 16px;
+        background: #1e293b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        margin-bottom: 20px;
+        font-size: 18px;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .desc {
+        color: #94a3b8;
+        line-height: 1.5;
+        margin-bottom: 22px;
+      }
+      .btn {
+        display: inline-block;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        padding: 15px;
+        border-radius: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+      }
+      .green {
+        background: #10b981;
+        color: #fff;
+      }
+      .dark {
+        background: #1e293b;
+        color: #fff;
+      }
+      .stats {
+        display: flex;
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .pill {
+        background: #1e293b;
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        color: #cbd5e1;
+      }
+      .join-input {
+        width: 100%;
+        height: 120px;
+        margin-top: 16px;
+        border-radius: 12px;
+        padding: 12px;
+        background: #0f172a;
+        color: white;
+        border: 1px solid #334155;
+        resize: vertical;
+        font-family: monospace;
+        font-size: 12px;
+      }
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .hero h1 {
+          font-size: 34px;
+        }
+      }
+    </style>
+  </head>
 
-<body>
-<div class="container">
-
-  <div class="hero">
-    <h1>LiveBid Platform</h1>
-    <p class="muted">Elige cómo quieres participar en la plataforma de subastas en tiempo real</p>
-  </div>
-
-  <div class="grid">
-
-    <div class="card">
-      <div class="image">Entrar en una sala activa</div>
-      <div class="title">Unirse a Subasta</div>
-      <div class="desc">
-        Accede a una sala en directo, visualiza productos, sigue la cuenta atrás y realiza pujas en tiempo real contra otros usuarios.
+  <body>
+    <div class="container">
+      <div class="hero">
+        <h1>LiveBid Platform</h1>
+        <p class="muted">
+          Elige cómo quieres participar en la plataforma de subastas en tiempo real
+        </p>
       </div>
 
-      <div class="stats">
-        <div class="pill">P2P</div>
-        <div class="pill">Sin backend</div>
+      <div class="grid">
+        <div class="card">
+          <div class="image">Entrar en una sala activa</div>
+          <div class="title">Unirse a Subasta</div>
+          <div class="desc">
+            Accede a una sala en directo, visualiza productos, sigue la cuenta atrás y realiza pujas
+            en tiempo real contra otros usuarios.
+          </div>
+
+          <div class="stats">
+            <div class="pill">P2P</div>
+            <div class="pill">Sin backend</div>
+          </div>
+
+          <textarea
+            id="joinCodeInput"
+            class="join-input"
+            placeholder="Pega aquí el JOIN CODE JSON"
+          ></textarea>
+
+          <button class="btn green" onclick="goRoom()" style="margin-top: 12px">
+            Entrar en una Sala
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="image">Crear nueva subasta</div>
+          <div class="title">Crear Subasta</div>
+          <div class="desc">
+            Configura una nueva sala, añade productos, define tiempo máximo, puja mínima, imágenes y
+            reglas de participación.
+          </div>
+
+          <div class="stats">
+            <div class="pill">Modo host</div>
+            <div class="pill">Publicación inmediata</div>
+          </div>
+
+          <button class="btn dark" onclick="goCreate()" style="margin-top: 22px">
+            Crear Nueva Subasta
+          </button>
+        </div>
       </div>
-
-      <textarea
-        id="joinCodeInput"
-        class="join-input"
-        placeholder="Pega aquí el JOIN CODE JSON"
-      ></textarea>
-
-      <button class="btn green" onclick="goRoom()" style="margin-top:12px">
-        Entrar en una Sala
-      </button>
     </div>
 
-    <div class="card">
-      <div class="image">Crear nueva subasta</div>
-      <div class="title">Crear Subasta</div>
-      <div class="desc">
-        Configura una nueva sala, añade productos, define tiempo máximo, puja mínima, imágenes y reglas de participación.
-      </div>
+    <script>
+      function goRoom() {
+        const raw = document.getElementById('joinCodeInput').value.trim()
 
-      <div class="stats">
-        <div class="pill">Modo host</div>
-        <div class="pill">Publicación inmediata</div>
-      </div>
+        if (!raw) {
+          alert('Pega el joinCode JSON')
+          return
+        }
 
-      <button class="btn dark" onclick="goCreate()" style="margin-top:22px">
-        Crear Nueva Subasta
-      </button>
-    </div>
+        try {
+          const joinCode = JSON.parse(raw)
 
-  </div>
-</div>
+          const participant = {
+            id: 'bidder-' + Date.now(),
+            name: 'Bidder ' + Math.floor(Math.random() * 1000),
+            role: 'bidder',
+            status: 'pending',
+            createdAt: Date.now()
+          }
 
-<script>
-function goRoom() {
-  const raw = document.getElementById('joinCodeInput').value.trim()
+          localStorage.setItem('joinCode', JSON.stringify(joinCode))
+          localStorage.setItem('participant', JSON.stringify(participant))
+          localStorage.removeItem('createdAuction')
 
-  if (!raw) {
-    alert('Pega el joinCode JSON')
-    return
-  }
+          window.location.href = './pages/auction-room.html'
+        } catch (err) {
+          alert('joinCode inválido')
+        }
+      }
 
-  try {
-    const joinCode = JSON.parse(raw)
+      function goCreate() {
+        localStorage.removeItem('joinCode')
+        localStorage.removeItem('participant')
+        window.location.href = './pages/create-auction.html'
+      }
+    </script>
 
-    const participant = {
-      id: 'bidder-' + Date.now(),
-      name: 'Bidder ' + Math.floor(Math.random() * 1000),
-      role: 'bidder',
-      status: 'pending',
-      createdAt: Date.now()
-    }
-
-    localStorage.setItem('joinCode', JSON.stringify(joinCode))
-    localStorage.setItem('participant', JSON.stringify(participant))
-    localStorage.removeItem('createdAuction')
-
-    window.location.href = './pages/auction-room.html'
-  } catch (err) {
-    alert('joinCode inválido')
-  }
-}
-
-function goCreate() {
-  localStorage.removeItem('joinCode')
-  localStorage.removeItem('participant')
-  window.location.href = './pages/create-auction.html'
-}
-</script>
-
-<script type="module" src="./pages/app.js"></script>
-</body>
+    <script type="module" src="./pages/app.js"></script>
+  </body>
 </html>
