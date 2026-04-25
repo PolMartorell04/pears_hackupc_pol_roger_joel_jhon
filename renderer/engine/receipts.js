@@ -12,16 +12,14 @@ function canonicalJson(obj) {
 
 function generateReceipt(state, lotId) {
   const lot = state.lots.find((l) => l.id === lotId)
-  if (!lot) throw new Error("Lot not found")
+  if (!lot) throw new Error('Lot not found')
 
-  if (lot.status !== "sold" && lot.status !== "unsold") {
-    throw new Error("Receipt can only be generated for sold or unsold lots")
+  if (lot.status !== 'sold' && lot.status !== 'unsold') {
+    throw new Error('Receipt can only be generated for sold or unsold lots')
   }
 
   const lotEvents = state.officialEvents.filter(
-    (event) =>
-      event.payload &&
-      event.payload.lotId === lotId
+    (event) => event.payload && event.payload.lotId === lotId
   )
 
   const canonical = canonicalJson({
@@ -36,7 +34,7 @@ function generateReceipt(state, lotId) {
     sessionId: state.session.id,
     lotId,
     winnerId: lot.winnerId,
-    finalAmount: lot.status === "sold" ? lot.currentPrice : undefined,
+    finalAmount: lot.status === 'sold' ? lot.currentPrice : undefined,
     status: lot.status,
     eventCount: lotEvents.length,
     resultHash,
@@ -45,6 +43,4 @@ function generateReceipt(state, lotId) {
   }
 }
 
-export {
-  generateReceipt
-}
+export { generateReceipt }
