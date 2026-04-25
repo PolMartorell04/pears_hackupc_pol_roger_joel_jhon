@@ -68,6 +68,13 @@ body{
   border-radius:12px;
   background:#1e293b;
   color:#fff;
+  outline:none;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  box-shadow:0 0 0 2px #10b981;
 }
 
 .field textarea{
@@ -83,13 +90,11 @@ body{
   text-align:center;
   color:#94a3b8;
   cursor:pointer;
-
   display:flex;
   align-items:center;
   justify-content:center;
   flex-direction:column;
   gap:12px;
-
   overflow:hidden;
 }
 
@@ -115,15 +120,8 @@ body{
   width:100%;
 }
 
-.list-item{
-  background:#1e293b;
-  padding:12px;
-  border-radius:12px;
-  margin-top:10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
+.green:hover{
+  background:#059669;
 }
 
 .small{
@@ -131,7 +129,6 @@ body{
   color:#94a3b8;
 }
 
-/* NUEVO */
 .right-column{
   position:sticky;
   top:20px;
@@ -140,17 +137,6 @@ body{
 .publish-box{
   margin-bottom:20px;
 }
-
-.remove-btn{
-  background:#334155;
-  color:#fff;
-  border:none;
-  padding:8px 12px;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-/* AÑADE ESTE CSS NUEVO */
 
 .products-slider{
   display:flex;
@@ -172,13 +158,11 @@ body{
 .product-card{
   min-width:320px;
   max-width:320px;
-  max-height: 50px;
   background:#1e293b;
   border-radius:14px;
   padding:10px;
   flex-shrink:0;
   position:relative;
-
   display:flex;
   align-items:center;
   gap:12px;
@@ -190,18 +174,6 @@ body{
   object-fit:cover;
   border-radius:10px;
   flex-shrink:0;
-  margin-bottom:0;
-}
-
-.product-card h4{
-  font-size:15px;
-  margin-bottom:6px;
-}
-
-.product-card p{
-  font-size:12px;
-  color:#94a3b8;
-  line-height:1.4;
 }
 
 .product-card button{
@@ -220,6 +192,7 @@ body{
 .product-info{
   flex:1;
   overflow:hidden;
+  padding-right:24px;
 }
 
 .product-info h4{
@@ -235,21 +208,40 @@ body{
   font-size:12px;
   color:#94a3b8;
   line-height:1.4;
-
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
+  white-space:nowrap;
   overflow:hidden;
+  text-overflow:ellipsis;
 }
 
+.back-btn{
+  position:fixed;
+  top:20px;
+  left:20px;
+  z-index:10;
+  background:#111827;
+  color:#fff;
+  border:none;
+  padding:12px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:20px;
+}
+
+@media(max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .right-column{
+    position:static;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<div style="position:fixed;top:20px;left:20px;z-index:10;">
-  <button onclick="goBack()" style="background:#111827;color:#fff;border:none;padding:12px 14px;border-radius:12px;cursor:pointer;font-size:20px;">←</button>
-</div>
+<button class="back-btn" onclick="goBack()">←</button>
 
 <div class="container">
 
@@ -258,17 +250,16 @@ body{
 
   <div class="grid">
 
-    <!-- IZQUIERDA -->
     <div class="card">
 
       <div class="field">
         <label>Título de la subasta</label>
-        <input type="text" placeholder="Ej: Electrónica Premium">
+        <input id="auctionTitle" type="text" placeholder="Ej: Electrónica Premium" autocomplete="off">
       </div>
 
       <div class="field">
         <label>Tipo de subasta</label>
-        <select>
+        <select id="auctionType">
           <option>Ascendente clásica</option>
           <option>Tiempo relámpago</option>
           <option>Secreta</option>
@@ -278,62 +269,69 @@ body{
 
       <div class="field">
         <label>Tiempo máximo (minutos)</label>
-        <input type="number" placeholder="30">
+        <input
+          id="auctionTime"
+          type="text"
+          placeholder="30"
+          inputmode="numeric"
+          autocomplete="off"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        >
       </div>
 
       <div class="field">
         <label>Puja mínima (€)</label>
-        <input type="number" placeholder="25">
+        <input
+          id="minBid"
+          type="text"
+          placeholder="25"
+          inputmode="numeric"
+          autocomplete="off"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        >
       </div>
 
       <div class="field">
         <label>Descripción general</label>
-        <textarea placeholder="Información importante de la sala, reglas, condiciones..."></textarea>
+        <textarea id="auctionDescription" placeholder="Información importante de la sala, reglas, condiciones..."></textarea>
       </div>
 
     </div>
 
-    <!-- DERECHA -->
     <div class="right-column">
 
-      <!-- PUBLICAR ARRIBA -->
       <div class="card publish-box">
         <button class="btn green" onclick="publishAuction()">
           Crear Subasta
         </button>
       </div>
 
-      <!-- PRODUCTOS -->
       <div class="card">
 
         <h2>Añadir producto</h2>
         <p class="small">Añade los productos que aparecerán en orden</p>
 
         <div class="field" style="margin-top:14px;">
-          <input type="text" id="productName" placeholder="Nombre del producto">
+          <input id="productName" type="text" placeholder="Nombre del producto" autocomplete="off">
         </div>
 
         <div class="field">
-          <input type="text" id="productDetail" placeholder="Detalle o estado">
+          <input id="productDetail" type="text" placeholder="Detalle o estado" autocomplete="off">
         </div>
 
         <div class="field">
-            <label>Imagen del producto</label>
+          <label>Imagen del producto</label>
 
-            <div class="upload" id="uploadBox">
-                <input type="file" id="file" accept="image/*" hidden>
-
-                <span id="uploadText">Haz clic para subir imagen</span>
-
-                <img id="preview" class="preview">
-            </div>
+          <div class="upload" id="uploadBox">
+            <input type="file" id="file" accept="image/*" hidden>
+            <span id="uploadText">Haz clic para subir imagen</span>
+            <img id="preview" class="preview">
+          </div>
         </div>
 
         <button class="btn green" onclick="addProduct()">
           Añadir producto
         </button>
-
-        
 
       </div>
 
@@ -346,82 +344,180 @@ body{
 </div>
 
 <script>
-// REEMPLAZA TODO TU BLOQUE DE IMAGEN POR ESTE
-
 const file = document.getElementById("file");
 const preview = document.getElementById("preview");
 const uploadBox = document.getElementById("uploadBox");
 const uploadText = document.getElementById("uploadText");
+
+const products = [];
 
 uploadBox.addEventListener("click", () => {
   file.click();
 });
 
 file.addEventListener("change", function () {
-
   const selected = this.files[0];
 
   if(selected){
-
     const url = URL.createObjectURL(selected);
 
     preview.src = url;
     preview.style.display = "block";
-
     uploadText.style.display = "none";
   }
-
 });
 
-
 function addProduct(){
+  const nameInput = document.getElementById("productName");
+  const detailInput = document.getElementById("productDetail");
 
-  const name = document.getElementById("productName").value.trim();
-  const detail = document.getElementById("productDetail").value.trim();
+  const name = nameInput.value.trim();
+  const detail = detailInput.value.trim();
 
-  if(!name) return;
-
-  let imgSrc = preview.src;
-
-  if(!imgSrc){
-    imgSrc = "https://via.placeholder.com/300x200?text=Producto";
+  if(!name){
+    alert("Añade un nombre de producto");
+    nameInput.focus();
+    return;
   }
 
-  const shortText = detail.split(" ").slice(0,6).join(" ") + (detail ? "..." : "");
+  const minBid = Number(document.getElementById("minBid").value || 1);
 
-  const card = document.createElement("div");
-  card.className = "product-card";
+  const product = {
+    id: "lot-" + Date.now(),
+    title: name,
+    detail,
+    image: preview.src || "https://via.placeholder.com/300x200?text=Producto",
+    status: "pending",
+    startingPrice: minBid,
+    currentPrice: minBid,
+    minIncrement: minBid
+  };
 
-  card.innerHTML = `
-    <button onclick="this.parentElement.remove()">✕</button>
+  products.push(product);
+  renderProducts();
 
-  <img src="${imgSrc}">
-
-  <div class="product-info">
-    <h4>${name}</h4>
-    <p>${shortText}</p>
-  </div>
-  `;
-
-  document.getElementById("products").appendChild(card);
-
-  document.getElementById("productName").value = "";
-  document.getElementById("productDetail").value = "";
-
+  nameInput.value = "";
+  detailInput.value = "";
   file.value = "";
   preview.src = "";
   preview.style.display = "none";
   uploadText.style.display = "block";
+
+  nameInput.focus();
+}
+
+function renderProducts(){
+  const container = document.getElementById("products");
+  container.innerHTML = "";
+
+  for(const product of products){
+    const shortText =
+      product.detail
+        ? product.detail.split(" ").slice(0, 6).join(" ") + "..."
+        : "Sin descripción";
+
+    const card = document.createElement("div");
+    card.className = "product-card";
+
+    card.innerHTML = `
+      <button onclick="removeProduct('${product.id}')">✕</button>
+      <img src="${product.image}">
+      <div class="product-info">
+        <h4>${product.title}</h4>
+        <p>${shortText}</p>
+      </div>
+    `;
+
+    container.appendChild(card);
+  }
+}
+
+function removeProduct(id){
+  const index = products.findIndex(product => product.id === id);
+
+  if(index !== -1){
+    products.splice(index, 1);
+    renderProducts();
+  }
 }
 
 function publishAuction(){
-  alert("Subasta creada correctamente");
+  const titleInput = document.getElementById("auctionTitle");
+  const timeInput = document.getElementById("auctionTime");
+  const minBidInput = document.getElementById("minBid");
+
+  const title = titleInput.value.trim();
+  const type = document.getElementById("auctionType").value;
+  const time = Number(timeInput.value);
+  const minBid = Number(minBidInput.value);
+  const description = document.getElementById("auctionDescription").value.trim();
+
+  if(!title){
+    alert("Añade un título para la subasta");
+    titleInput.focus();
+    return;
+  }
+
+  if(!time || time <= 0){
+    alert("Añade un tiempo válido");
+    timeInput.focus();
+    return;
+  }
+
+  if(!minBid || minBid <= 0){
+    alert("Añade una puja mínima válida");
+    minBidInput.focus();
+    return;
+  }
+
+  if(products.length === 0){
+    alert("Añade al menos un producto");
+    document.getElementById("productName").focus();
+    return;
+  }
+
+  const auction = {
+    session: {
+      id: "session-" + Date.now(),
+      title,
+      type,
+      description,
+      status: "live",
+      hostId: "host-1",
+      createdAt: Date.now()
+    },
+    settings: {
+      durationMinutes: time,
+      minBid
+    },
+    lots: products.map((product, index) => ({
+      ...product,
+      status: index === 0 ? "live" : "pending"
+    })),
+    participants: [
+      {
+        id: "bidder-1",
+        name: "Tú",
+        role: "bidder",
+        status: "approved",
+        createdAt: Date.now()
+      }
+    ],
+    currentLotId: products[0].id,
+    officialEvents: []
+  };
+
+  localStorage.setItem("createdAuction", JSON.stringify(auction));
+  localStorage.setItem("auctionRole", "host");
+  localStorage.removeItem("joinCode");
+
+  window.location.href = "./auction-room.html";
 }
 
 function goBack(){
   window.location.href = "./../index.html";
 }
 </script>
-
+<script type="module" src="./app.js"></script>
 </body>
 </html>

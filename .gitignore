@@ -1,3 +1,16 @@
+# build
 out/
+
+# deps
 node_modules/
-todo
+
+# pear / p2p local db (CRÍTICO)
+auction-db-*
+auction-db-client-*
+
+# logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

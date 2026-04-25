@@ -199,34 +199,23 @@ app.on('open-url', (evt, url) => {
   handleDeepLink(url)
 })
 
-const lock = app.requestSingleInstanceLock()
-
-if (!lock) {
-  app.quit()
-} else {
-  app.on('second-instance', (evt, args) => {
-    const url = args.find((arg) => arg.startsWith(protocol + '://'))
-    if (url) handleDeepLink(url)
+app.whenReady().then(() => {
+  createWindow().catch((err) => {
+    console.error('Failed to create window:', err)
+    app.quit()
   })
 
-  app.whenReady().then(() => {
-    createWindow().catch((err) => {
-      console.error('Failed to create window:', err)
-      app.quit()
-    })
-
-    app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow().catch((err) => {
-          console.error('Failed to create window:', err)
-        })
-      }
-    })
-  })
-
-  app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-      app.quit()
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow().catch((err) => {
+        console.error('Failed to create window:', err)
+      })
     }
   })
-}
+})
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})

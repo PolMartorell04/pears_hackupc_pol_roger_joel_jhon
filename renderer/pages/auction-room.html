@@ -6,185 +6,32 @@
 <title>Sala de Subastas</title>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-body{
-  font-family:Arial,sans-serif;
-  background:#0f172a;
-  color:#fff;
-  padding:24px;
-}
-
-.container{
-  max-width:1400px;
-  margin:auto;
-}
-
-.top{
-  display:grid;
-  grid-template-columns:2fr 1fr 1fr 1fr;
-  gap:16px;
-}
-
-.card{
-  background:#111827;
-  padding:20px;
-  border-radius:16px;
-}
-
-.muted{
-  color:#94a3b8;
-  font-size:14px;
-}
-
-.big{
-  font-size:30px;
-  font-weight:bold;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:2fr 1fr;
-  gap:20px;
-}
-
-.product{
-  height:320px;
-  background:#1e293b;
-  border-radius:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#94a3b8;
-  margin-bottom:18px;
-}
-
-.buttons{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:20px;
-}
-
-.btn{
-  border:none;
-  padding:14px 18px;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.green{
-  background:#10b981;
-  color:white;
-}
-
-.dark{
-  background:#1e293b;
-  color:white;
-}
-
-.list div{
-  display:flex;
-  justify-content:space-between;
-  padding:8px 0;
-  border-bottom:1px solid #1e293b;
-}
-
-/* NUEVOS ESTILOS */
-.auction-stats{
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:14px;
-  margin-top:20px;
-}
-
-.stat-box{
-  background:#1e293b;
-  padding:16px;
-  border-radius:12px;
-  text-align:center;
-}
-
-.label{
-  display:block;
-  font-size:13px;
-  color:#94a3b8;
-  margin-bottom:8px;
-}
-
-.value{
-  font-size:20px;
-  font-weight:bold;
-}
-
-.danger{
-  color:#f87171;
-}
-
-.success{
-  color:#10b981;
-}
-
-.quick-bids{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.bid-btn{
-  flex:1;
-  border:none;
-  padding:12px;
-  border-radius:10px;
-  background:#10b981;
-  color:#fff;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.custom-bid{
-  display:flex;
-  gap:10px;
-  margin-top:20px;
-}
-
-.custom-bid input{
-  flex:1;
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  background:#1e293b;
-  color:#fff;
-}
-
-.primary-btn{
-  border:none;
-  padding:12px 18px;
-  border-radius:10px;
-  background:#2563eb;
-  color:#fff;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-.back-btn{
-  position:fixed;
-  top:20px;
-  left:20px;
-  z-index:10;
-  background:#111827;
-  color:#fff;
-  border:none;
-  padding:12px 14px;
-  border-radius:12px;
-  cursor:pointer;
-  font-size:20px;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#0f172a;color:#fff;padding:24px}
+.container{max-width:1400px;margin:auto}
+.top{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.card{background:#111827;padding:20px;border-radius:16px}
+.muted{color:#94a3b8;font-size:14px}
+.big{font-size:30px;font-weight:bold}
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-top:20px}
+.product{height:320px;background:#1e293b;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#94a3b8;margin-bottom:18px;overflow:hidden}
+.product img{width:100%;height:100%;object-fit:cover}
+.list div{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1e293b}
+.auction-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:20px}
+.stat-box{background:#1e293b;padding:16px;border-radius:12px;text-align:center}
+.label{display:block;font-size:13px;color:#94a3b8;margin-bottom:8px}
+.value{font-size:20px;font-weight:bold}
+.danger{color:#f87171}
+.success{color:#10b981}
+.quick-bids{display:flex;gap:10px;margin-top:20px}
+.bid-btn{flex:1;border:none;padding:12px;border-radius:10px;background:#10b981;color:#fff;font-weight:bold;cursor:pointer}
+.custom-bid{display:flex;gap:10px;margin-top:20px}
+.custom-bid input{flex:1;padding:12px;border:none;border-radius:10px;background:#1e293b;color:#fff}
+.primary-btn{border:none;padding:12px 18px;border-radius:10px;background:#2563eb;color:#fff;cursor:pointer;font-weight:bold}
+.back-btn{position:fixed;top:20px;left:20px;z-index:10;background:#111827;color:#fff;border:none;padding:12px 14px;border-radius:12px;cursor:pointer;font-size:20px}
+.join-code{font-family:monospace;font-size:12px;white-space:pre-wrap;word-break:break-all;background:#0f172a;padding:10px;border-radius:10px;margin-top:10px;max-height:120px;overflow:auto}
+.hidden{display:none}
+@media(max-width:900px){.top,.grid,.auction-stats{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -194,139 +41,431 @@ body{
 
 <div class="container">
 
-  <!-- TOP -->
   <div class="top">
     <div class="card">
       <div class="muted">Sala</div>
-      <div class="big">LiveBid #01</div>
+      <div class="big" id="sessionTitle">LiveBid</div>
+      <div class="muted" id="networkStatus">Preparando red...</div>
+    </div>
+
+    <div class="card" id="joinPanel">
+      <div class="muted">Código para unirse</div>
+      <div class="join-code" id="joinCodeBox">Aún no generado</div>
     </div>
   </div>
-  <!-- MAIN -->
+
   <div class="grid">
 
-    <!-- IZQUIERDA -->
     <div class="card">
+      <div class="product" id="productBox"></div>
 
-      <div class="product"><img src="https://picsum.photos/600/300"></div>
+      <h1 id="lotTitle">Sin lote</h1>
+      <p class="muted" id="lotDetail"></p>
 
-      <h1>Reloj Vintage Edición Limitada</h1>
-      <p class="muted">Lote #124 · Excelente estado · Certificado incluido</p>
-
-      <section class="card" style="padding:20px;">
+      <section class="card" style="padding:20px;margin-top:18px;">
 
         <div class="auction-stats">
-
           <div class="stat-box">
             <span class="label">Tiempo restante</span>
-            <span class="value danger" id="timer2">06:21</span>
+            <span class="value danger" id="timer2">--:--</span>
           </div>
 
           <div class="stat-box">
             <span class="label">Puja actual</span>
-            <span class="value" id="price2">420 €</span>
+            <span class="value" id="price2">0 €</span>
           </div>
 
           <div class="stat-box">
             <span class="label">Incremento mínimo</span>
-            <span class="value">10 €</span>
+            <span class="value" id="minIncrement">0 €</span>
           </div>
 
           <div class="stat-box">
             <span class="label">Ganando</span>
-            <span class="value success">Joel</span>
+            <span class="value success" id="winner">Sin pujas</span>
           </div>
-
         </div>
 
         <div class="quick-bids">
-          <button class="bid-btn" onclick="bid(10)">+10 €</button>
-          <button class="bid-btn" onclick="bid(25)">+25 €</button>
-          <button class="bid-btn" onclick="bid(50)">+50 €</button>
+          <button class="bid-btn" onclick="bidIncrement(10)">+10 €</button>
+          <button class="bid-btn" onclick="bidIncrement(25)">+25 €</button>
+          <button class="bid-btn" onclick="bidIncrement(50)">+50 €</button>
         </div>
 
+        <button class="primary-btn" id="closeLotBtn" style="margin-top:15px;" onclick="closeCurrentLot()">
+          Cerrar lote
+        </button>
+
         <div class="custom-bid">
-          <input type="number" id="customBid" placeholder="Introduce tu puja">
+          <input
+            type="text"
+            id="customBid"
+            placeholder="Introduce tu puja total"
+            inputmode="numeric"
+            autocomplete="off"
+            oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+          />
           <button class="primary-btn" onclick="customBid()">Pujar</button>
         </div>
 
       </section>
-
     </div>
 
-    <!-- DERECHA -->
     <div>
-
       <div class="card" style="margin-bottom:20px;">
         <h2>Próximo producto</h2>
         <br>
-        <div class="product" style="height:140px;">Consola Retro</div>
+        <div class="product" id="nextProduct" style="height:140px;">Sin siguiente lote</div>
         <p class="muted">Empieza cuando termine la actual</p>
       </div>
 
       <div class="card">
         <h2>Actividad</h2>
         <br>
-
-        <div class="list" id="activity">
-          <div><span>usuario_91</span><span>€1250</span></div>
-          <div><span>bidmaster22</span><span>€1225</span></div>
-          <div><span>anon_18</span><span>€1200</span></div>
-        </div>
-
+        <div class="list" id="activity"></div>
       </div>
-
     </div>
 
   </div>
 
 </div>
 
-<script>
-let price = 1250;
-let time = 134;
+<script type="module">
+import { applyEvent } from '../engine/reducer.js'
+import { handleBidRequest } from '../engine/bidFlow.js'
+import { closeLotEvents } from '../engine/lotActions.js'
+import {
+  onNetworkMessage,
+  startHostSession,
+  joinSession,
+  sendBidRequest,
+  publishOfficialEvent
+} from './app.js'
 
-function bid(amount){
-  price += amount;
-
-  document.getElementById("price").innerText = "€" + price;
-  document.getElementById("price2").innerText = price + " €";
-
-  const row = document.createElement("div");
-  row.innerHTML = "<span>Tú</span><span>€" + price + "</span>";
-
-  document.getElementById("activity").prepend(row);
+const fallbackState = {
+  session: {
+    id: 'session-demo',
+    title: 'LiveBid demo',
+    hostId: 'host-1',
+    status: 'live',
+    createdAt: Date.now()
+  },
+  settings: {
+    durationMinutes: 6,
+    minBid: 10
+  },
+  lots: [
+    {
+      id: 'lot-1',
+      title: 'Reloj Vintage Edición Limitada',
+      detail: 'Excelente estado · Certificado incluido',
+      image: 'https://picsum.photos/600/300',
+      status: 'live',
+      startingPrice: 420,
+      currentPrice: 420,
+      minIncrement: 10
+    }
+  ],
+  participants: [
+    {
+      id: 'bidder-1',
+      name: 'Tú',
+      role: 'bidder',
+      status: 'approved',
+      createdAt: Date.now()
+    }
+  ],
+  currentLotId: 'lot-1',
+  officialEvents: []
 }
 
-function customBid(){
-  const val = parseInt(document.getElementById("customBid").value);
+let state = JSON.parse(localStorage.getItem('createdAuction') || 'null') || fallbackState
+let role = localStorage.getItem('createdAuction') ? 'host' : 'bidder'
 
-  if(!isNaN(val) && val > 0){
-    bid(val);
-    document.getElementById("customBid").value = "";
+let participant =
+  JSON.parse(localStorage.getItem('participant') || 'null') ||
+  {
+    id: role === 'host' ? state.session.hostId : 'bidder-' + Date.now(),
+    name: role === 'host' ? 'Host' : 'Tú',
+    role: role === 'host' ? 'host' : 'bidder',
+    status: 'approved',
+    createdAt: Date.now()
+  }
+
+let time = Math.max(1, Number(state.settings?.durationMinutes || 6)) * 60
+
+function nextSequence() {
+  return state.officialEvents.length + 1
+}
+
+function getCurrentLot() {
+  return state.lots.find(lot => lot.id === state.currentLotId)
+}
+
+function participantName(id) {
+  return state.participants.find(p => p.id === id)?.name || id || ''
+}
+
+function addActivityText(left, right) {
+  const row = document.createElement('div')
+  row.innerHTML = `<span>${left}</span><span>${right}</span>`
+  document.getElementById('activity').prepend(row)
+}
+
+function dispatch(event) {
+  state = applyEvent(state, event)
+  addActivity(event)
+  render()
+}
+
+async function publishAndApply(event) {
+  dispatch(event)
+  await publishOfficialEvent(event)
+}
+
+function render() {
+  const lot = getCurrentLot()
+
+  document.getElementById('sessionTitle').innerText = state.session.title
+  document.getElementById('closeLotBtn').classList.toggle('hidden', role !== 'host')
+  document.getElementById('joinPanel').classList.toggle('hidden', role !== 'host')
+
+  if (!lot) {
+    document.getElementById('lotTitle').innerText = 'Lote cerrado'
+    document.getElementById('lotDetail').innerText = ''
+    document.getElementById('price2').innerText = '-'
+    document.getElementById('minIncrement').innerText = '-'
+    document.getElementById('winner').innerText = '-'
+    document.getElementById('productBox').innerHTML = 'Sin lote activo'
+    return
+  }
+
+  document.getElementById('lotTitle').innerText = lot.title
+  document.getElementById('lotDetail').innerText = lot.detail || ''
+  document.getElementById('price2').innerText = lot.currentPrice + ' €'
+  document.getElementById('minIncrement').innerText = lot.minIncrement + ' €'
+  document.getElementById('winner').innerText = lot.currentBidderId
+    ? participantName(lot.currentBidderId)
+    : 'Sin pujas'
+
+  document.getElementById('productBox').innerHTML = lot.image
+    ? `<img src="${lot.image}">`
+    : 'Sin imagen'
+
+  const next = state.lots.find(l => l.status === 'pending')
+
+  document.getElementById('nextProduct').innerHTML = next?.image
+    ? `<img src="${next.image}">`
+    : (next?.title || 'Sin siguiente lote')
+}
+
+function addActivity(event) {
+  if (event.type === 'BID_ACCEPTED') {
+    addActivityText(participantName(event.payload.bidderId), event.payload.amount + ' €')
+  }
+
+  if (event.type === 'BID_REJECTED') {
+    addActivityText('Puja rechazada', event.payload.reason)
+  }
+
+  if (event.type === 'PARTICIPANT_APPROVED') {
+    addActivityText(
+      'Participante aprobado',
+      participantName(event.payload.participantId || event.payload.participant?.id)
+    )
+  }
+
+  if (event.type === 'LOT_SOLD') {
+    addActivityText('Lote vendido', event.payload.amount + ' €')
+  }
+
+  if (event.type === 'LOT_UNSOLD') {
+    addActivityText('Lote sin venta', event.payload.lotId)
+  }
+}
+
+function buildBid(amount) {
+  const lot = getCurrentLot()
+  if (!lot) return null
+
+  return {
+    type: 'BID_REQUEST',
+    sessionId: state.session.id,
+    lotId: lot.id,
+    amount,
+    bidderId: participant.id,
+    createdAt: Date.now()
+  }
+}
+
+async function submitBid(amount) {
+  const bid = buildBid(amount)
+  if (!bid) return
+
+  if (role === 'host') {
+    const event = handleBidRequest(state, bid, nextSequence())
+    await publishAndApply(event)
+  } else {
+    await sendBidRequest(bid)
+    addActivityText('Puja enviada', amount + ' €')
+  }
+}
+
+window.bidIncrement = function(increment) {
+  const lot = getCurrentLot()
+  if (lot) submitBid(lot.currentPrice + increment)
+}
+
+window.customBid = function() {
+  const input = document.getElementById('customBid')
+  const amount = Number(input.value)
+
+  if (Number.isFinite(amount) && amount > 0) {
+    submitBid(amount)
+    input.value = ''
+  }
+}
+
+window.closeCurrentLot = async function() {
+  if (role !== 'host') return
+
+  const lot = getCurrentLot()
+  if (!lot) return
+
+  const events = closeLotEvents(state, lot.id, {
+    sessionId: state.session.id,
+    sequence: nextSequence()
+  })
+
+  for (const event of events) {
+    await publishAndApply(event)
+  }
+}
+
+window.goBack = function() {
+  window.location.href = './../index.html'
+}
+
+onNetworkMessage(async (msg) => {
+  console.log('NETWORK MSG', msg)
+
+  if (msg.type === 'HOST_READY') {
+    const joinCodeWithState = {
+      ...msg.joinCode,
+      auctionState: state
+    }
+
+    const encoded = btoa(JSON.stringify(joinCodeWithState))
+
+    localStorage.setItem('joinCode', JSON.stringify(joinCodeWithState))
+
+    document.getElementById('joinCodeBox').innerText = JSON.stringify(joinCodeWithState, null, 2)
+    document.getElementById('networkStatus').innerText = 'Host P2P listo'
+
+    console.log('JOIN CODE JSON:', JSON.stringify(joinCodeWithState))
+    console.log('JOIN CODE BASE64:', encoded)
+  }
+
+  if (msg.type === 'JOIN_READY') {
+    document.getElementById('networkStatus').innerText = 'Conectado a la subasta P2P'
+  }
+
+  if (msg.type === 'WORKER_ERROR') {
+    document.getElementById('networkStatus').innerText = 'Error worker: ' + msg.message
+  }
+
+  if (msg.type === 'official-event') {
+    dispatch(msg.payload)
+  }
+
+  if (msg.type === 'autopass-input' && role === 'host') {
+    const input = msg.payload
+
+    if (input.type === 'JOIN_REQUEST') {
+      const exists = state.participants.some(p => p.id === input.participant.id)
+
+      if (!exists) {
+        state = {
+          ...state,
+          participants: [...state.participants, input.participant]
+        }
+      }
+
+      const event = {
+        type: 'PARTICIPANT_APPROVED',
+        sessionId: state.session.id,
+        sequence: nextSequence(),
+        createdAt: Date.now(),
+        payload: {
+          participantId: input.participant.id,
+          participant: input.participant
+        }
+      }
+
+      await publishAndApply(event)
+    }
+
+    if (input.type === 'BID_REQUEST') {
+      const event = handleBidRequest(state, input, nextSequence())
+      await publishAndApply(event)
+    }
+  }
+})
+
+async function bootNetwork() {
+  render()
+
+  try {
+    if (role === 'host') {
+      localStorage.removeItem('joinCode')
+      localStorage.removeItem('participant')
+
+      await startHostSession(state)
+    } else {
+      const storedJoinCode = localStorage.getItem('joinCode')
+      const storedParticipant = localStorage.getItem('participant')
+
+      if (!storedJoinCode || !storedParticipant) {
+        throw new Error('Falta joinCode o participant')
+      }
+
+      const joinCode = JSON.parse(storedJoinCode)
+      participant = JSON.parse(storedParticipant)
+
+      if (joinCode.auctionState) {
+        state = joinCode.auctionState
+      }
+
+      state.session.id = joinCode.sessionId
+      state.session.hostId = joinCode.hostId
+
+      if (!state.participants.some(p => p.id === participant.id)) {
+        state.participants.push(participant)
+      }
+
+      render()
+
+      await joinSession(joinCode, participant)
+    }
+  } catch (err) {
+    document.getElementById('networkStatus').innerText = 'Modo local: ' + err.message
   }
 }
 
 setInterval(() => {
+  if (time > 0) {
+    time--
 
-  if(time > 0){
-    time--;
+    const m = Math.floor(time / 60).toString().padStart(2, '0')
+    const s = (time % 60).toString().padStart(2, '0')
 
-    let m = Math.floor(time / 60).toString().padStart(2,"0");
-    let s = (time % 60).toString().padStart(2,"0");
-
-    document.getElementById("timer").innerText = m + ":" + s;
-    document.getElementById("timer2").innerText = m + ":" + s;
-
-  }else{
-    document.getElementById("timer").innerText = "FINALIZADA";
-    document.getElementById("timer2").innerText = "FINALIZADA";
+    document.getElementById('timer2').innerText = m + ':' + s
+  } else {
+    document.getElementById('timer2').innerText = 'FINALIZADA'
   }
+}, 1000)
 
-},1000);
-
-function goBack(){
-  window.location.href = "./../index.html";
-}
+bootNetwork()
 </script>
 
 </body>
