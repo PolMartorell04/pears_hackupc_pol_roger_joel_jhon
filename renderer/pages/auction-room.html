@@ -222,6 +222,13 @@ let participant =
 
 let time = Math.max(1, Number(state.settings?.durationMinutes || 6)) * 60
 
+const processedInputs = new Set()
+
+const processedOfficialEvents = new Set()
+
+function officialEventKey(event) {
+  return `${event.sessionId}:${event.sequence}:${event.type}`
+}
 
 function nextSequence() {
   return state.officialEvents.length + 1
@@ -267,6 +274,11 @@ function addActivityText(left, right) {
 }
 
 function dispatch(event) {
+  const key = officialEventKey(event)
+
+  if (processedOfficialEvents.has(key)) return
+  processedOfficialEvents.add(key)
+
   state = applyEvent(state, event)
   addActivity(event)
   render()
@@ -441,6 +453,10 @@ onNetworkMessage(async (msg) => {
 
   if (msg.type === 'autopass-input' && role === 'host') {
     const input = msg.payload
+
+    if (!input.id) return
+    if (processedInputs.has(input.id)) return
+    processedInputs.add(input.id)
 
     if (input.type === 'JOIN_REQUEST') {
       const exists = state.participants.some(p => p.id === input.participant.id)
