@@ -1,10 +1,6 @@
 import { validateBid } from './validation.js'
 import { EventTypes } from './events.js'
 
-/**
- * Genera eventos oficiales a partir de una petición de puja.
- * Host authoritative: solo el host decide si aceptar o rechazar.
- */
 export function handleBidRequest(state, bidRequest, sequence) {
   const { sessionId, lotId, bidderId, amount } = bidRequest
 
@@ -38,9 +34,6 @@ export function handleBidRequest(state, bidRequest, sequence) {
   }
 }
 
-/**
- * Versión para UI local o tests.
- */
 export function handleBidRequestEvents(state, bidRequest, sequence) {
   return [handleBidRequest(state, bidRequest, sequence)]
 }

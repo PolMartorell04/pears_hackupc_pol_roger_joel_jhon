@@ -42,7 +42,6 @@ function generateReceipt(state, lotId) {
     resultHash,
     createdAt: Date.now(),
     signedBy: state.session.hostId
-    // signature se añade luego en capa P2P
   }
 }
 

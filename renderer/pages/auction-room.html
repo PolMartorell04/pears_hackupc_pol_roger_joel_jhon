@@ -31,12 +31,40 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:#fff;padding:24px}
 .back-btn{position:fixed;top:20px;left:20px;z-index:10;background:#111827;color:#fff;border:none;padding:12px 14px;border-radius:12px;cursor:pointer;font-size:20px}
 .join-code{font-family:monospace;font-size:12px;white-space:pre-wrap;word-break:break-all;background:#0f172a;padding:10px;border-radius:10px;margin-top:10px;max-height:120px;overflow:auto}
 .hidden{display:none}
+.winner-toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: #10b981;
+  color: white;
+  padding: 18px 24px;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: .25s ease;
+  min-width: 320px;
+  text-align: center;
+}
+
+.winner-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.winner-toast strong {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 6px;
+}
 @media(max-width:900px){.top,.grid,.auction-stats{grid-template-columns:1fr}}
 </style>
 </head>
 
 <body>
-
+<div id="winnerToast" class="winner-toast"></div>
 <button class="back-btn" onclick="goBack()">←</button>
 
 <div class="container">
@@ -192,7 +220,13 @@ let participant =
     createdAt: Date.now()
   }
 
-let time = Math.max(1, Number(state.settings?.durationMinutes || 6)) * 60
+const processedInputs = new Set()
+
+const processedOfficialEvents = new Set()
+
+function officialEventKey(event) {
+  return `${event.sessionId}:${event.sequence}:${event.type}`
+}
 
 function nextSequence() {
   return state.officialEvents.length + 1
@@ -205,6 +239,31 @@ function getCurrentLot() {
 function participantName(id) {
   return state.participants.find(p => p.id === id)?.name || id || ''
 }
+function lotTitleById(id) {
+  return state.lots.find(lot => lot.id === id)?.title || 'Lote'
+}
+
+let winnerToastTimer = null
+
+function showWinnerNotification(event) {
+  const winnerName = participantName(event.payload.winnerId)
+  const lotTitle = lotTitleById(event.payload.lotId)
+  const amount = event.payload.amount
+
+  const toast = document.getElementById('winnerToast')
+
+  toast.innerHTML = `
+    <strong>🏆 Subasta ganada</strong>
+    ${winnerName} ganó "${lotTitle}" por ${amount} €
+  `
+
+  toast.classList.add('show')
+
+  clearTimeout(winnerToastTimer)
+  winnerToastTimer = setTimeout(() => {
+    toast.classList.remove('show')
+  }, 5000)
+}
 
 function addActivityText(left, right) {
   const row = document.createElement('div')
@@ -213,6 +272,11 @@ function addActivityText(left, right) {
 }
 
 function dispatch(event) {
+  const key = officialEventKey(event)
+
+  if (processedOfficialEvents.has(key)) return
+  processedOfficialEvents.add(key)
+
   state = applyEvent(state, event)
   addActivity(event)
   render()
@@ -229,6 +293,11 @@ function render() {
   document.getElementById('sessionTitle').innerText = state.session.title
   document.getElementById('closeLotBtn').classList.toggle('hidden', role !== 'host')
   document.getElementById('joinPanel').classList.toggle('hidden', role !== 'host')
+
+  if (role === 'host') {
+    document.querySelector('.quick-bids').style.display = 'none'
+    document.querySelector('.custom-bid').style.display = 'none'
+  }
 
   if (!lot) {
     document.getElementById('lotTitle').innerText = 'Lote cerrado'
@@ -275,9 +344,16 @@ function addActivity(event) {
     )
   }
 
-  if (event.type === 'LOT_SOLD') {
-    addActivityText('Lote vendido', event.payload.amount + ' €')
-  }
+if (event.type === 'LOT_SOLD') {
+  const winnerName = participantName(event.payload.winnerId)
+
+  addActivityText(
+    '🏆 Ganador: ' + winnerName,
+    event.payload.amount + ' €'
+  )
+
+  showWinnerNotification(event)
+}
 
   if (event.type === 'LOT_UNSOLD') {
     addActivityText('Lote sin venta', event.payload.lotId)
@@ -381,6 +457,10 @@ onNetworkMessage(async (msg) => {
   if (msg.type === 'autopass-input' && role === 'host') {
     const input = msg.payload
 
+    if (!input.id) return
+    if (processedInputs.has(input.id)) return
+    processedInputs.add(input.id)
+
     if (input.type === 'JOIN_REQUEST') {
       const exists = state.participants.some(p => p.id === input.participant.id)
 
@@ -453,17 +533,25 @@ async function bootNetwork() {
 }
 
 setInterval(() => {
-  if (time > 0) {
-    time--
+  const endsAt = state.settings?.endsAt;
 
-    const m = Math.floor(time / 60).toString().padStart(2, '0')
-    const s = (time % 60).toString().padStart(2, '0')
-
-    document.getElementById('timer2').innerText = m + ':' + s
-  } else {
-    document.getElementById('timer2').innerText = 'FINALIZADA'
+  if (!endsAt) {
+    document.getElementById('timer2').innerText = '--:--';
+    return;
   }
-}, 1000)
+
+  const remainingMs = endsAt - Date.now();
+  const remainingSeconds = Math.max(0, Math.floor(remainingMs / 1000));
+
+  if (remainingSeconds > 0) {
+    const m = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
+    const s = (remainingSeconds % 60).toString().padStart(2, '0');
+
+    document.getElementById('timer2').innerText = m + ':' + s;
+  } else {
+    document.getElementById('timer2').innerText = 'FINALIZADA';
+  }
+}, 1000);
 
 bootNetwork()
 </script>
