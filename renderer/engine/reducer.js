@@ -1,4 +1,18 @@
 // renderer/engine/reducer.ts
+
+const OFFICIAL_EVENT_TYPES = new Set([
+  "SESSION_CREATED",
+  "PARTICIPANT_APPROVED",
+  "LOT_STARTED",
+  "BID_ACCEPTED",
+  "BID_REJECTED",
+  "LOT_CLOSED",
+  "LOT_SOLD",
+  "LOT_UNSOLD",
+  "SESSION_CLOSED",
+  "RECEIPT_ISSUED"
+])
+
 function applyEvent(state, event) {
   const nextState = (() => {
     switch (event.type) {
@@ -6,70 +20,94 @@ function applyEvent(state, event) {
         return {
           ...state,
           session: event.payload.session
-        };
-      case "PARTICIPANT_JOIN_REQUESTED":
+        }
+
+      case "PARTICIPANT_APPROVED": {
+        const approvedParticipant = event.payload.participant
+          ? { ...event.payload.participant, status: "approved" }
+          : null
+
+        const participantId = event.payload.participantId || approvedParticipant?.id
+        const exists = state.participants.some((participant) => participant.id === participantId)
+
         return {
           ...state,
-          participants: [...state.participants, event.payload.participant]
-        };
-      case "PARTICIPANT_APPROVED":
-        return {
-          ...state,
-          participants: state.participants.map(
-            (participant) => participant.id === event.payload.participantId ? { ...participant, status: "approved" } : participant
-          )
-        };
+          participants: exists
+            ? state.participants.map((participant) =>
+                participant.id === participantId
+                  ? { ...participant, ...approvedParticipant, status: "approved" }
+                  : participant
+              )
+            : [...state.participants, approvedParticipant]
+        }
+      }
+
       case "LOT_STARTED":
         return {
           ...state,
           currentLotId: event.payload.lotId,
           lots: state.lots.map(
-            (lot) => lot.id === event.payload.lotId ? { ...lot, status: "live" } : lot
+            (lot) =>
+              lot.id === event.payload.lotId
+                ? { ...lot, status: "live" }
+                : lot
           )
-        };
-      case "BID_REQUESTED":
-        return state;
+        }
+
       case "BID_ACCEPTED":
         return {
           ...state,
-          lots: state.lots.map(
-            (lot) => lot.id === event.payload.lotId ? {
-              ...lot,
-              currentPrice: event.payload.amount,
-              currentBidderId: event.payload.bidderId
-            } : lot
+          lots: state.lots.map((lot) =>
+            lot.id === event.payload.lotId
+              ? {
+                  ...lot,
+                  currentPrice: event.payload.amount,
+                  currentBidderId: event.payload.bidderId
+                }
+              : lot
           )
-        };
+        }
+
       case "BID_REJECTED":
-        return state;
+        return state
+
       case "LOT_CLOSED":
         return {
           ...state,
-          lots: state.lots.map(
-            (lot) => lot.id === event.payload.lotId ? { ...lot, status: "closing" } : lot
+          lots: state.lots.map((lot) =>
+            lot.id === event.payload.lotId
+              ? { ...lot, status: "closing" }
+              : lot
           )
-        };
+        }
+
       case "LOT_SOLD":
         return {
           ...state,
           currentLotId: null,
-          lots: state.lots.map(
-            (lot) => lot.id === event.payload.lotId ? {
-              ...lot,
-              status: "sold",
-              winnerId: event.payload.winnerId,
-              currentPrice: event.payload.amount
-            } : lot
+          lots: state.lots.map((lot) =>
+            lot.id === event.payload.lotId
+              ? {
+                  ...lot,
+                  status: "sold",
+                  winnerId: event.payload.winnerId,
+                  currentPrice: event.payload.amount
+                }
+              : lot
           )
-        };
+        }
+
       case "LOT_UNSOLD":
         return {
           ...state,
           currentLotId: null,
-          lots: state.lots.map(
-            (lot) => lot.id === event.payload.lotId ? { ...lot, status: "unsold" } : lot
+          lots: state.lots.map((lot) =>
+            lot.id === event.payload.lotId
+              ? { ...lot, status: "unsold" }
+              : lot
           )
-        };
+        }
+
       case "SESSION_CLOSED":
         return {
           ...state,
@@ -78,16 +116,28 @@ function applyEvent(state, event) {
             ...state.session,
             status: "closed"
           }
-        };
+        }
+
+      case "RECEIPT_ISSUED":
+        return {
+          ...state,
+          receipts: [...(state.receipts || []), event.payload]
+        }
+
       default:
-        return state;
+        return state
     }
-  })();
+  })()
+
+  // 👇 SOLO eventos oficiales se guardan
+  const officialEvents = OFFICIAL_EVENT_TYPES.has(event.type)
+    ? [...nextState.officialEvents, event]
+    : nextState.officialEvents
+
   return {
     ...nextState,
-    officialEvents: [...nextState.officialEvents, event]
-  };
+    officialEvents
+  }
 }
-export {
-  applyEvent
-};
+
+export { applyEvent }

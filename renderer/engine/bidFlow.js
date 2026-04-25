@@ -1,65 +1,46 @@
-// renderer/engine/validation.ts
-function validateBid(state, bid) {
-  if (bid.sessionId !== state.session.id) return { ok: false, reason: "Invalid session" };
-  if (state.session.status !== "live") return { ok: false, reason: "Session is not live" };
-  if (state.currentLotId !== bid.lotId) return { ok: false, reason: "Not current lot" };
-  const lot = state.lots.find((l) => l.id === bid.lotId);
-  if (!lot) return { ok: false, reason: "Lot not found" };
-  if (lot.status !== "live") return { ok: false, reason: "Lot is not live" };
-  if (lot.minIncrement <= 0) return { ok: false, reason: "Invalid minimum increment" };
-  const participant = state.participants.find((p) => p.id === bid.bidderId);
-  if (!participant) return { ok: false, reason: "Participant not found" };
-  if (participant.status !== "approved") return { ok: false, reason: "Participant not approved" };
-  if (participant.role !== "bidder") return { ok: false, reason: "Only bidders can bid" };
-  if (bid.amount <= lot.currentPrice) return { ok: false, reason: `Bid must be greater than ${lot.currentPrice}` };
-  const minimumValidBid = lot.currentPrice + lot.minIncrement;
-  if (bid.amount < minimumValidBid) return { ok: false, reason: `Bid must be at least ${minimumValidBid}` };
-  return { ok: true };
-}
+import { validateBid } from './validation.js'
+import { EventTypes } from './events.js'
 
-// renderer/engine/bidFlow.ts
-function bidBase(bid, sequence) {
-  return { sessionId: bid.sessionId, sequence, createdAt: Date.now() };
-}
-function createBidRequestedEvent(bid, sequence) {
-  return {
-    ...bidBase(bid, sequence),
-    type: "BID_REQUESTED",
-    payload: {
-      lotId: bid.lotId,
-      bidderId: bid.bidderId,
-      amount: bid.amount
-    }
-  };
-}
-function resolveBidRequest(state, bid, sequence) {
-  const validation = validateBid(state, bid);
-  const base = bidBase(bid, sequence);
+/**
+ * Genera eventos oficiales a partir de una petición de puja.
+ * Host authoritative: solo el host decide si aceptar o rechazar.
+ */
+export function handleBidRequest(state, bidRequest, sequence) {
+  const { sessionId, lotId, bidderId, amount } = bidRequest
+
+  const validation = validateBid(state, bidRequest)
+
   if (!validation.ok) {
     return {
-      ...base,
-      type: "BID_REJECTED",
-      payload: { lotId: bid.lotId, bidderId: bid.bidderId, amount: bid.amount, reason: validation.reason }
-    };
+      type: EventTypes.BID_REJECTED,
+      sessionId,
+      sequence,
+      createdAt: Date.now(),
+      payload: {
+        bidderId,
+        lotId,
+        amount,
+        reason: validation.reason
+      }
+    }
   }
+
   return {
-    ...base,
-    type: "BID_ACCEPTED",
-    payload: { lotId: bid.lotId, bidderId: bid.bidderId, amount: bid.amount }
-  };
+    type: EventTypes.BID_ACCEPTED,
+    sessionId,
+    sequence,
+    createdAt: Date.now(),
+    payload: {
+      bidderId,
+      lotId,
+      amount
+    }
+  }
 }
-function handleBidRequestEvents(state, bid, firstSequence) {
-  return [
-    createBidRequestedEvent(bid, firstSequence),
-    resolveBidRequest(state, bid, firstSequence + 1)
-  ];
+
+/**
+ * Versión para UI local o tests.
+ */
+export function handleBidRequestEvents(state, bidRequest, sequence) {
+  return [handleBidRequest(state, bidRequest, sequence)]
 }
-function handleBidRequest(state, bid, sequence) {
-  return resolveBidRequest(state, bid, sequence);
-}
-export {
-  createBidRequestedEvent,
-  handleBidRequest,
-  handleBidRequestEvents,
-  resolveBidRequest
-};
