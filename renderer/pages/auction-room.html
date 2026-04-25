@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sala de Subastas</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#0f172a;
+  color:#fff;
+  padding:24px;
+}
+
+.container{
+  max-width:1400px;
+  margin:auto;
+}
+
+.top{
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:16px;
+}
+
+.card{
+  background:#111827;
+  padding:20px;
+  border-radius:16px;
+}
+
+.muted{
+  color:#94a3b8;
+  font-size:14px;
+}
+
+.big{
+  font-size:30px;
+  font-weight:bold;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:20px;
+}
+
+.product{
+  height:320px;
+  background:#1e293b;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#94a3b8;
+  margin-bottom:18px;
+}
+
+.buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.btn{
+  border:none;
+  padding:14px 18px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.green{
+  background:#10b981;
+  color:white;
+}
+
+.dark{
+  background:#1e293b;
+  color:white;
+}
+
+.list div{
+  display:flex;
+  justify-content:space-between;
+  padding:8px 0;
+  border-bottom:1px solid #1e293b;
+}
+
+/* NUEVOS ESTILOS */
+.auction-stats{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:14px;
+  margin-top:20px;
+}
+
+.stat-box{
+  background:#1e293b;
+  padding:16px;
+  border-radius:12px;
+  text-align:center;
+}
+
+.label{
+  display:block;
+  font-size:13px;
+  color:#94a3b8;
+  margin-bottom:8px;
+}
+
+.value{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.danger{
+  color:#f87171;
+}
+
+.success{
+  color:#10b981;
+}
+
+.quick-bids{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.bid-btn{
+  flex:1;
+  border:none;
+  padding:12px;
+  border-radius:10px;
+  background:#10b981;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.custom-bid{
+  display:flex;
+  gap:10px;
+  margin-top:20px;
+}
+
+.custom-bid input{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#1e293b;
+  color:#fff;
+}
+
+.primary-btn{
+  border:none;
+  padding:12px 18px;
+  border-radius:10px;
+  background:#2563eb;
+  color:#fff;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.back-btn{
+  position:fixed;
+  top:20px;
+  left:20px;
+  z-index:10;
+  background:#111827;
+  color:#fff;
+  border:none;
+  padding:12px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:20px;
+}
+</style>
+</head>
+
+<body>
+
+<button class="back-btn" onclick="goBack()">←</button>
+
+<div class="container">
+
+  <!-- TOP -->
+  <div class="top">
+    <div class="card">
+      <div class="muted">Sala</div>
+      <div class="big">LiveBid #01</div>
+    </div>
+  </div>
+  <!-- MAIN -->
+  <div class="grid">
+
+    <!-- IZQUIERDA -->
+    <div class="card">
+
+      <div class="product"><img src="https://picsum.photos/600/300"></div>
+
+      <h1>Reloj Vintage Edición Limitada</h1>
+      <p class="muted">Lote #124 · Excelente estado · Certificado incluido</p>
+
+      <section class="card" style="padding:20px;">
+
+        <div class="auction-stats">
+
+          <div class="stat-box">
+            <span class="label">Tiempo restante</span>
+            <span class="value danger" id="timer2">06:21</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="label">Puja actual</span>
+            <span class="value" id="price2">420 €</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="label">Incremento mínimo</span>
+            <span class="value">10 €</span>
+          </div>
+
+          <div class="stat-box">
+            <span class="label">Ganando</span>
+            <span class="value success">Joel</span>
+          </div>
+
+        </div>
+
+        <div class="quick-bids">
+          <button class="bid-btn" onclick="bid(10)">+10 €</button>
+          <button class="bid-btn" onclick="bid(25)">+25 €</button>
+          <button class="bid-btn" onclick="bid(50)">+50 €</button>
+        </div>
+
+        <div class="custom-bid">
+          <input type="number" id="customBid" placeholder="Introduce tu puja">
+          <button class="primary-btn" onclick="customBid()">Pujar</button>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- DERECHA -->
+    <div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <h2>Próximo producto</h2>
+        <br>
+        <div class="product" style="height:140px;">Consola Retro</div>
+        <p class="muted">Empieza cuando termine la actual</p>
+      </div>
+
+      <div class="card">
+        <h2>Actividad</h2>
+        <br>
+
+        <div class="list" id="activity">
+          <div><span>usuario_91</span><span>€1250</span></div>
+          <div><span>bidmaster22</span><span>€1225</span></div>
+          <div><span>anon_18</span><span>€1200</span></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+let price = 1250;
+let time = 134;
+
+function bid(amount){
+  price += amount;
+
+  document.getElementById("price").innerText = "€" + price;
+  document.getElementById("price2").innerText = price + " €";
+
+  const row = document.createElement("div");
+  row.innerHTML = "<span>Tú</span><span>€" + price + "</span>";
+
+  document.getElementById("activity").prepend(row);
+}
+
+function customBid(){
+  const val = parseInt(document.getElementById("customBid").value);
+
+  if(!isNaN(val) && val > 0){
+    bid(val);
+    document.getElementById("customBid").value = "";
+  }
+}
+
+setInterval(() => {
+
+  if(time > 0){
+    time--;
+
+    let m = Math.floor(time / 60).toString().padStart(2,"0");
+    let s = (time % 60).toString().padStart(2,"0");
+
+    document.getElementById("timer").innerText = m + ":" + s;
+    document.getElementById("timer2").innerText = m + ":" + s;
+
+  }else{
+    document.getElementById("timer").innerText = "FINALIZADA";
+    document.getElementById("timer2").innerText = "FINALIZADA";
+  }
+
+},1000);
+
+function goBack(){
+  window.location.href = "./../index.html";
+}
+</script>
+
+</body>
+</html>
