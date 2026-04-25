@@ -220,8 +220,6 @@ let participant =
     createdAt: Date.now()
   }
 
-let time = Math.max(1, Number(state.settings?.durationMinutes || 6)) * 60
-
 const processedInputs = new Set()
 
 const processedOfficialEvents = new Set()
@@ -295,6 +293,11 @@ function render() {
   document.getElementById('sessionTitle').innerText = state.session.title
   document.getElementById('closeLotBtn').classList.toggle('hidden', role !== 'host')
   document.getElementById('joinPanel').classList.toggle('hidden', role !== 'host')
+
+  if (role === 'host') {
+    document.querySelector('.quick-bids').style.display = 'none'
+    document.querySelector('.custom-bid').style.display = 'none'
+  }
 
   if (!lot) {
     document.getElementById('lotTitle').innerText = 'Lote cerrado'
@@ -530,17 +533,25 @@ async function bootNetwork() {
 }
 
 setInterval(() => {
-  if (time > 0) {
-    time--
+  const endsAt = state.settings?.endsAt;
 
-    const m = Math.floor(time / 60).toString().padStart(2, '0')
-    const s = (time % 60).toString().padStart(2, '0')
-
-    document.getElementById('timer2').innerText = m + ':' + s
-  } else {
-    document.getElementById('timer2').innerText = 'FINALIZADA'
+  if (!endsAt) {
+    document.getElementById('timer2').innerText = '--:--';
+    return;
   }
-}, 1000)
+
+  const remainingMs = endsAt - Date.now();
+  const remainingSeconds = Math.max(0, Math.floor(remainingMs / 1000));
+
+  if (remainingSeconds > 0) {
+    const m = Math.floor(remainingSeconds / 60).toString().padStart(2, '0');
+    const s = (remainingSeconds % 60).toString().padStart(2, '0');
+
+    document.getElementById('timer2').innerText = m + ':' + s;
+  } else {
+    document.getElementById('timer2').innerText = 'FINALIZADA';
+  }
+}, 1000);
 
 bootNetwork()
 </script>
