@@ -1,36 +1,51 @@
 // renderer/engine/receipts.ts
-function simpleHash(value) {
-  let hash = 0;
-  for (let i = 0; i < value.length; i++) {
-    hash = (hash << 5) - hash + value.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash).toString(16);
+
+import crypto from 'crypto'
+
+function sha256(value) {
+  return crypto.createHash('sha256').update(value).digest('hex')
 }
+
+function canonicalJson(obj) {
+  return JSON.stringify(obj, Object.keys(obj).sort())
+}
+
 function generateReceipt(state, lotId) {
-  const lot = state.lots.find((l) => l.id === lotId);
-  if (!lot) {
-    throw new Error("Lot not found");
-  }
+  const lot = state.lots.find((l) => l.id === lotId)
+  if (!lot) throw new Error("Lot not found")
+
   if (lot.status !== "sold" && lot.status !== "unsold") {
-    throw new Error("Receipt can only be generated for sold or unsold lots");
+    throw new Error("Receipt can only be generated for sold or unsold lots")
   }
+
   const lotEvents = state.officialEvents.filter(
-    (event) => "lotId" in event.payload && event.payload.lotId === lotId
-  );
-  const logHash = simpleHash(JSON.stringify(lotEvents));
+    (event) =>
+      event.payload &&
+      event.payload.lotId === lotId
+  )
+
+  const canonical = canonicalJson({
+    sessionId: state.session.id,
+    lotId,
+    events: lotEvents
+  })
+
+  const resultHash = sha256(canonical)
+
   return {
     sessionId: state.session.id,
     lotId,
     winnerId: lot.winnerId,
-    finalAmount: lot.status === "sold" ? lot.currentPrice : void 0,
+    finalAmount: lot.status === "sold" ? lot.currentPrice : undefined,
     status: lot.status,
     eventCount: lotEvents.length,
-    logHash,
+    resultHash,
     createdAt: Date.now(),
     signedBy: state.session.hostId
-  };
+    // signature se añade luego en capa P2P
+  }
 }
+
 export {
   generateReceipt
-};
+}

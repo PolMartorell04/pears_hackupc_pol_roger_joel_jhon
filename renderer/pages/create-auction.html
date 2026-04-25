@@ -508,6 +508,8 @@ function publishAuction(){
   };
 
   localStorage.setItem("createdAuction", JSON.stringify(auction));
+  localStorage.setItem("auctionRole", "host");
+  localStorage.removeItem("joinCode");
 
   window.location.href = "./auction-room.html";
 }
@@ -516,6 +518,6 @@ function goBack(){
   window.location.href = "./../index.html";
 }
 </script>
-
+<script type="module" src="./app.js"></script>
 </body>
 </html>
