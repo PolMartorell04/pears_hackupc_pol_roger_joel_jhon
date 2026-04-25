@@ -129,7 +129,6 @@ function applyEvent(state, event) {
     }
   })()
 
-  // 👇 SOLO eventos oficiales se guardan
   const officialEvents = OFFICIAL_EVENT_TYPES.has(event.type)
     ? [...nextState.officialEvents, event]
     : nextState.officialEvents
